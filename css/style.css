@@ -1,0 +1,406 @@
+/*General settings*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-size:20px;
+    font-family: 'Open Sans', sans-serif;
+    background-color: 	rgb(101, 68, 41);
+}
+
+ul{
+    list-style: none;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+/*******************
+*Bottom section
+********************/
+
+.section-top{
+    
+    height: 40vh;
+   
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(images/money1.jpg);
+    background-size: cover;
+    background-position: 0% 20%;
+    position: relative;
+/*    background: #2980B9;   fallback for old browsers */
+/*    background: -webkit-linear-gradient(to right, #aae6fc, #6DD5FA, #2980B9);   Chrome 10-25, Safari 5.1-6 */
+/*    background: linear-gradient(to right, #aae6fc, #6DD5FA, #2980B9);  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+}
+
+.total-data{
+    width: 500px;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: relative;
+    margin: 0 auto;
+    top: 5vh;
+    text-transform: uppercase;
+    border-radius: 15px;
+    color: #fffdf9;
+}
+
+.current-datatime{
+    font-size: 200%;
+    letter-spacing: 1px;
+    text-align: center;
+    
+    padding: 10px 0;
+}
+
+
+.total-income{
+    display: inline-block;
+    width:45%;
+    float: left;
+    background-color: transparent;
+   
+    
+    border-top:2px solid #2d9856;
+    border-bottom:2px solid #2d9856;
+    border-right:2px solid #2d9856;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    
+    
+    text-align: center;
+    padding: 15px 0;
+    font-size: 120%;
+    
+}
+
+.total-expense{
+    display: inline-block;
+    float: right;
+    width:45%; 
+    background-color: transparent;
+    border-top:2px solid rgba(253, 46, 75, 0.57);
+    border-bottom:2px solid rgba(253, 46, 75, 0.57);
+    border-left:2px solid rgba(253, 46, 75, 0.57);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    
+    text-align: center;
+    padding: 15px 0;
+    font-size: 120%;
+}
+
+.total-expense .total-percentage{
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 70%;
+    margin-left: 15px;
+    padding: 0 5px;
+    background-color: #d36767;
+    border: solid 0.5px #fc3d5b;
+    transform: translateY(-1px);
+    color:rgba(241, 248, 255, 0.94);
+    
+    border-radius: 5px;
+}
+
+
+.profit-calculation{
+    padding: 20px 0;
+    text-align: center;
+    font-size: 150%;
+}
+
+
+
+
+
+/*******************
+*Bottom section
+********************/
+
+
+.container{
+    width: 1000px; 
+    margin: 0 auto;
+}
+
+/******************
+*Input elements
+*******************/
+
+.add-data-container .container{
+    text-align: center;
+}
+
+
+.add-data-container{
+    border-bottom: 0.6px solid black;
+    margin: 0 auto;
+    background-color: rgba(219, 193, 172, 0.81);
+    padding: 10px 0 20px 0;
+}
+
+
+.add-data-container button{      
+    width:30px;
+    height: 30px;
+    margin-right: 20px;
+    margin-top: 10px;
+    vertical-align: top;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.fa-plus{
+    font-size: 160%;
+    padding: 3px 4px;
+    border: solid 2.5px black;
+    border-radius: 50%;
+}
+
+
+.fa-check-circle{
+    font-size: 240%;
+    transform: translateY(-0.5px);
+}
+.add-data-container button:active{
+    transform: translateY(3px);
+}
+
+.income-color{
+    color:#2d9856;
+    border-color: #2d9856;
+}
+.expense-color{
+    color:#bc2c42;
+    border-color: #bc2c42;
+}
+
+.input-description{
+    
+    border: 1px solid #e7e7e7;
+    background-color:white;
+    height: 30px;
+    font-size:100%;
+    width: 400px;
+    padding: 15px;
+    outline: none;
+    margin-right: 20px;
+    margin-top:10px;
+    vertical-align: top;
+    border-radius: 5px;
+    
+}
+
+.input-value{
+    
+    border: 1px solid #e7e7e7;
+    background-color:white;
+    height: 30px;
+    font-size:100%;
+    width: 130px;
+    padding: 15px 5px;
+    outline: none;
+    margin-right: 20px;
+    margin-top:10px;
+    vertical-align: top;
+    border-radius: 5px;
+}
+
+
+/******************
+*Data elements
+*******************/
+.data-container{
+    padding-top: 40px;
+}
+
+.income-container{
+    width:48%;
+    margin-right: 2%;
+    float:left;
+}
+
+.income-list-title{
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 110%;
+    color: #24d9a2;
+    padding: 0 10px 20px 5px;
+}
+
+.income-list-title:after{
+    display: block;
+    width: 20px;
+    height: 1px;
+    background-color:#24d9a2;
+    content: "";
+    margin-top: 5px;
+    margin-left: 15px;
+}
+
+.income-item{
+    padding: 20px 15px;
+    background-color:transparent;
+    border-bottom: black double 1px;
+}
+
+.income-item .item-description{
+    display: inline-block;
+    color: antiquewhite;
+}
+
+.income-item .item-value{
+    display:inline-block;
+    float:right;   
+    color: #24d9a2;
+}
+
+
+
+
+ .delete-item-button{   
+    margin-left: 0px;
+    width: 0px;
+    color: rgba(0, 0, 0, 0);
+    float:right;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 0%;
+    cursor: pointer;
+    transform: translateY(10px);
+    transform: rotateZ(-90deg);
+    transition: margin-left 0.6s, transform 0.6s, width 0.2s, color 0.5s 0.2s;
+}
+
+.income-item:hover .delete-item-button{
+    
+    width: 20px;
+    margin-left: 20px;
+    transform: rotateZ(0deg);
+    transform: translateY(0);
+    color: #24d9a2;
+    font-size: 124%;
+}
+
+
+/*try to reduce the bag with cross button, delete it`s div*/
+
+.delete-item-button:active{
+    /* we use !important here cause otherwise translation won`t be working  */
+    transform: translateY(3px) !important;
+}
+
+
+
+
+
+
+
+.expense-container{
+    width:48%;
+    margin-left: 2%;
+    float:right;
+}
+
+.expense-list-title{
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 110%;
+    color: #e83b56;
+    padding: 0 10px 20px 5px;
+}
+
+.expense-list-title:after{
+    display: block;
+    width: 20px;
+    height: 1px;
+    background-color:#bc2c42;
+    content: "";
+    margin-top: 5px;
+    margin-left: 15px;
+}
+
+.expense-item{
+    padding: 20px 15px;
+    background-color:transparent;
+    border-bottom: black double 1px;
+}
+
+.expense-item .item-description{
+    display: inline-block;
+    color: antiquewhite;
+}
+
+.expense-item .item-value{
+    display:inline-block;
+    float:right;
+    color: #e83b56;
+}
+
+.expense-item .item-percentage{
+    float:right;
+    display: inline-block;
+    
+    font-size: 60%;
+    margin-left: 4px;
+    padding: 0 3px;
+    width: 34px;
+    text-align: center;
+    background-color: #d36767;
+    border: solid 0.5px #fc3d5b;
+    transform: translateY(5px);
+    color:rgba(240, 248, 255, 0.69);
+    
+    border-radius: 5px;
+}
+
+.expense-item:hover .delete-item-button{
+    
+    width: 20px;
+    margin-left: 20px;
+    transform: rotateZ(0deg);
+    transform: translateY(0);
+    color: #e83b56;
+    font-size: 124%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
