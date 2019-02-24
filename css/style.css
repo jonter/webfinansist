@@ -1,4 +1,4 @@
-/*General settings*/
+/*General*/
 *{
     margin: 0;
     padding: 0;
@@ -29,15 +29,12 @@ ul{
 .section-top{
     
     height: 40vh;
-   
+/*  source image: https://unsplash.com/photos/yw7mV9JeND4  */
     background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(images/money1.jpg);
     background-size: cover;
     background-position: 0% 20%;
     position: relative;
-/*    background: #2980B9;   fallback for old browsers */
-/*    background: -webkit-linear-gradient(to right, #aae6fc, #6DD5FA, #2980B9);   Chrome 10-25, Safari 5.1-6 */
-/*    background: linear-gradient(to right, #aae6fc, #6DD5FA, #2980B9);  W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
+   
 }
 
 .total-data{
@@ -180,10 +177,22 @@ ul{
     color:#2d9856;
     border-color: #2d9856;
 }
+
+.income-color:focus{
+    border: 1px solid #2d9856;
+}
+
+
 .expense-color{
     color:#bc2c42;
     border-color: #bc2c42;
 }
+
+.expense-color:focus{
+    border: 1px solid #bc2c42;
+}
+
+
 
 .input-description{
     
@@ -201,6 +210,7 @@ ul{
     
 }
 
+
 .input-value{
     
     border: 1px solid #e7e7e7;
@@ -215,6 +225,7 @@ ul{
     vertical-align: top;
     border-radius: 5px;
 }
+
 
 
 /******************
