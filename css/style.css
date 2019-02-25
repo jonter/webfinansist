@@ -157,7 +157,7 @@ ul{
     cursor: pointer;
 }
 
-.fa-plus{
+.fa-plus, .fa-minus{
     font-size: 160%;
     padding: 3px 4px;
     border: solid 2.5px black;
@@ -176,6 +176,7 @@ ul{
 .income-color{
     color:#2d9856;
     border-color: #2d9856;
+    transition: color 0.3s,border-color 0.3s;
 }
 
 .income-color:focus{
@@ -186,6 +187,7 @@ ul{
 .expense-color{
     color:#bc2c42;
     border-color: #bc2c42;
+    transition: color 0.5s,border-color 0.5s;
 }
 
 .expense-color:focus{
