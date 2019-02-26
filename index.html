@@ -45,49 +45,53 @@
             <div class="container">
                 <!--     another icon          <i class="fas fa-minus"></i>-->
                 <button class="button-change js--button-change"><i class="fas fa-plus income-color"></i></button>
-                <input type="text" class="input-description income-color js--input-description" placeholder="Enter your income/expense">
-                <input type="number" class="input-value income-color js--input-value" placeholder="Value" min="0" max="1000000000" step="1">
+                <input type="text" class="input-description income-color js--input-description" placeholder="Enter your income/expense" maxlength="24">
+                <input type="number" class="input-value income-color js--input-value" placeholder="Value" min="0" max="100000000" step="1">
                 <button class="button-add js--button-add"><i class="far fa-check-circle income-color"></i></button>
             </div>
         </div>
 
     	<div class="data-container">
     	    <div class="container">
-    	        <div class="income-container">
+    	        <div class="income-container ">
                     <h3 class="income-list-title">incomes</h3>
                     
-    	            <ul class="income-data-list">
-    	                <li class="income-item">
+    	            <ul class="income-data-list js--income-list">
+<!--  delete that later
+    	                <li class="income-item" id="item-0">
     	                    <p class="item-description">Salary</p>
     	                    <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
     	                    <p class="item-value">+ 150,000.00 </p>
     	                </li>
-    	                <li class="income-item">
+    	                <li class="income-item" id="item-1">
     	                    <p class="item-description">Sold car</p>
     	                    <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
     	                    <p class="item-value">+ 650,000.00 </p>
     	                </li>
+-->
     	            </ul>
     	        </div>
     	        
-    	        <div class="expense-container clearfix">
+    	        <div class="expense-container clearfix ">
     	            <h3 class="expense-list-title">expenses</h3>
                     
-    	            <ul class="expense-data-list">
-    	                <li class="expense-item">
+    	            <ul class="expense-data-list js--expense-list">
+<!--  delete that later
+    	                <li class="expense-item" id="item-0">
     	                    <p class="item-description">bought starbucks coffee</p>
     	                    <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
     	                    <div class="item-percentage">5%</div>
     	                    <p class="item-value">- 15,000.00 </p>
     	                    
     	                </li>
-    	                <li class="expense-item">
+    	                <li class="expense-item" id="item-1">
     	                    <p class="item-description">bought a new TV-set</p>
     	                    <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
     	                    <div class="item-percentage">17%</div>
     	                    <p class="item-value">- 50,000.00 </p>
     	                    
     	                </li>
+-->
     	            </ul>
     	        </div>
     	    
