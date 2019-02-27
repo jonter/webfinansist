@@ -285,16 +285,19 @@ const FinanceModel = (function(){
     function updatePercentageItems(){
         data.allItems.expense.forEach(function(element){
             element.calculatePercentage(data.totalValues.income); 
-            console.log(data.allItems.expense);
         });
     }
     
+    function getData (){
+        return data;
+    }
     
     return{
         currentState,
         changeType,
         addItem,
-        updateData
+        updateData,
+        getData
     }
     
     
@@ -314,6 +317,7 @@ const FinanceController = (function(){
     function initialization(){
         
         setupListeners();
+        setDefaults();
     }
     
     function setupListeners(){
@@ -339,6 +343,10 @@ const FinanceController = (function(){
         
         const newData = FinanceModel.updateData(addedItem);  
         FinanceView.updateData(newData);
+    }
+    
+    function setDefaults(){
+        FinanceView.updateData(FinanceModel.getData());
     }
     
     return  {
