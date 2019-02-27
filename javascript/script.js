@@ -151,8 +151,8 @@ const FinanceView = (function(){
             for (let j = 0; j < expenseArray.length; j++){
                 
                 if(expenseArray[j].id === idItem){
-                    if(expenseArray<1){
-                        itemPercentageArray[i].textContent = "&mdash;";
+                    if(expenseArray[j].percentage < 1){
+                        itemPercentageArray[i].innerHTML = "&mdash;";
                     }else{
                         itemPercentageArray[i].textContent = expenseArray[j].percentage+"%";
                     }
