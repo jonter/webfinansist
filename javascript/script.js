@@ -1,4 +1,5 @@
 //TODO: add a possibility to delete an item
+//now: refactor code for updating display and model they shouldn`t recieve any parametrs
 
 const FinanceView = (function(){
     const DOMelements ={
@@ -11,7 +12,9 @@ const FinanceView = (function(){
         totalIncomeValue:       document.querySelector(".js--total-income-value"),
         totalExpenseValue:      document.querySelector(".js--total-expense-value"),
         totalProfitValue:       document.querySelector(".js--total-profit-value"),
-        totalProfitText:        document.querySelector(".js--total-profit-text")
+        totalProfitText:        document.querySelector(".js--total-profit-text"),
+        dataContainer:          document.querySelector(".js--data-container"),
+        datetimeTitle:          document.querySelector(".js--current-datatime")
     }
     
     function changeType(currentInputType){
@@ -64,7 +67,9 @@ const FinanceView = (function(){
             htmlCode =  `
                             <li class="income-item" id="item-${newItem.item.id}">
                                 <p class="item-description">${newItem.item.description}</p>
-                                <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
+                                <button class="delete-item-button">
+                                    <i class="far fa-times-circle js--delete-item-button"></i>
+                                </button>
                                 <p class="item-value">+ ${newItem.item.value.toFixed(2)} </p>
                             </li>
                         `;
@@ -79,7 +84,9 @@ const FinanceView = (function(){
             htmlCode =  `
                             <li class="expense-item" id="item-${newItem.item.id}">
                                 <p class="item-description">${newItem.item.description}</p>
-                                <button class="delete-item-button"><i class="far fa-times-circle"></i></button>
+                                <button class="delete-item-button">
+                                    <i class="far fa-times-circle js--delete-item-button"></i>
+                                </button>
                                 <div class="item-percentage">${percentageHtml}</div>
                                 <p class="item-value">- ${newItem.item.value.toFixed(2)} </p>
                             </li>
@@ -102,12 +109,9 @@ const FinanceView = (function(){
     }
     
     function updateData(newData){
-        updateIncomeAndExpense(newData);
-              
-        profitUpdate(newData);
-        
+        updateIncomeAndExpense(newData);      
+        updateProfit(newData);
         updateItemsPercentage(newData.allItems.expense);
-        //stopped here...
     }
     
     function updateIncomeAndExpense(newData){
@@ -125,7 +129,7 @@ const FinanceView = (function(){
         DOMelements.totalExpenseValue.innerHTML = htmlExpenseText;
     }
     
-    function profitUpdate(newData){
+    function updateProfit(newData){
         const profit = newData.totalValues.profit;
         let profitText = "profit";
         
@@ -162,6 +166,20 @@ const FinanceView = (function(){
         }
     }
     
+    function deleteItem(idItem){
+        element = document.getElementById(idItem);
+        element.parentNode.removeChild(element);    
+    }
+    
+    function displayData(){
+        const currentDate = new Date();
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        const monthNumber = currentDate.getMonth();
+        const year  = currentDate.getFullYear();
+        
+        DOMelements.datetimeTitle.textContent = months[monthNumber-1]+" "+year;
+    }
     
     
     return{
@@ -169,7 +187,9 @@ const FinanceView = (function(){
         changeType,
         getUserInput,
         addItem,
-        updateData
+        updateData,
+        deleteItem,
+        displayData
     }
     
     
@@ -259,19 +279,28 @@ const FinanceModel = (function(){
             currentState.inputType="income";
     }
     
-    function updateData(addedItem){
+    function updateData(){
         
-        if(addedItem.type==="income"){
-            data.totalValues.income+=addedItem.item.value;
-        }else{
-            data.totalValues.expense.value+=addedItem.item.value;
-        }
+        calculateTotals();
         calculateTotalPercentage();
         updatePercentageItems();
+               
+        return data;
+    }
+    
+    function calculateTotals(){
+        data.totalValues.income = 0;
+        data.totalValues.expense.value = 0;
+        
+        data.allItems.income.forEach(function(element){
+            data.totalValues.income += element.value;
+        });
+        
+        data.allItems.expense.forEach(function(element){
+            data.totalValues.expense.value += element.value;
+        });
         
         data.totalValues.profit = data.totalValues.income - data.totalValues.expense.value;
-        
-        return data;
     }
     
     function calculateTotalPercentage(){
@@ -292,11 +321,23 @@ const FinanceModel = (function(){
         return data;
     }
     
+    
+    function deleteItem(id,type){
+        
+        data.allItems[type].forEach(function(element,index){
+            if(element.id == id){
+                data.allItems[type].splice(index,1);
+                return;
+            }
+        });
+    }
+    
     return{
         currentState,
         changeType,
         addItem,
         updateData,
+        deleteItem,
         getData
     }
     
@@ -318,6 +359,7 @@ const FinanceController = (function(){
         
         setupListeners();
         setDefaults();
+        
     }
     
     function setupListeners(){
@@ -327,13 +369,16 @@ const FinanceController = (function(){
             FinanceView.changeType(currentInputType);  
         });
         
-        DOMelements.addItemButton.addEventListener('click',addItem);
+        DOMelements.addItemButton.addEventListener('click', addItem);
         
-        document.addEventListener('keypress',function(event){
+        document.addEventListener('keypress', function(event){
             if (event.keyCode === 13 || event.which === 13) {
                 addItem();
             }
         });
+        
+        DOMelements.dataContainer.addEventListener('click', deleteItem)
+        
     }
     
     function addItem (){
@@ -341,12 +386,37 @@ const FinanceController = (function(){
         const addedItem = FinanceModel.addItem(userInput.description,userInput.value);
         FinanceView.addItem(addedItem);
         
-        const newData = FinanceModel.updateData(addedItem);  
+        const newData = FinanceModel.updateData();  
         FinanceView.updateData(newData);
     }
     
     function setDefaults(){
         FinanceView.updateData(FinanceModel.getData());
+        FinanceView.displayData();
+    }
+    
+    
+    
+    
+    function deleteItem(event){
+        //find item and its id where button was pressed
+        const item = event.target.parentNode.parentNode;
+        const itemID = item.id;
+        
+        if(itemID){
+            
+            const id = itemID.split("-")[1];
+            const type = item.classList[0].split('-')[0];
+            
+            
+            FinanceModel.deleteItem(id,type);
+            
+            FinanceView.deleteItem(itemID);
+            
+            const data = FinanceModel.updateData();
+            FinanceView.updateData(data);            
+        }
+        
     }
     
     return  {
