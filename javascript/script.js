@@ -1,6 +1,4 @@
-//TODO: add a possibility to delete an item
-//now: refactor code for updating display and model they shouldn`t recieve any parametrs
-
+//TODO: refactor code a little
 const FinanceView = (function(){
     const DOMelements ={
         changeTypeButton:       document.querySelector(".js--button-change"),
@@ -53,7 +51,7 @@ const FinanceView = (function(){
         }
     }
     
-    function addItem(newItem){
+    function addItem(newItem, type){
         
         let listElement, htmlCode;
         
@@ -62,33 +60,33 @@ const FinanceView = (function(){
             return null;
         }
         
-        if(newItem.type==="income"){ //refactor that
+        if(type==="income"){ //refactor that later
             listElement = DOMelements.incomeContainer;
             htmlCode =  `
-                            <li class="income-item" id="item-${newItem.item.id}">
-                                <p class="item-description">${newItem.item.description}</p>
+                            <li class="income-item" id="item-${newItem.id}">
+                                <p class="item-description">${newItem.description}</p>
                                 <button class="delete-item-button">
                                     <i class="far fa-times-circle js--delete-item-button"></i>
                                 </button>
-                                <p class="item-value">+ ${newItem.item.value.toFixed(2)} </p>
+                                <p class="item-value">+ ${newItem.value.toFixed(2)} </p>
                             </li>
                         `;
         }else{
             listElement = DOMelements.expenseContainer;
-            let percentageHtml = newItem.item.percentage;
+            let percentageHtml = newItem.percentage+"%";
             
             if (percentageHtml === -1) {
                 percentageHtml = "&mdash;"; 
             }
             
             htmlCode =  `
-                            <li class="expense-item" id="item-${newItem.item.id}">
-                                <p class="item-description">${newItem.item.description}</p>
+                            <li class="expense-item" id="item-${newItem.id}">
+                                <p class="item-description">${newItem.description}</p>
                                 <button class="delete-item-button">
                                     <i class="far fa-times-circle js--delete-item-button"></i>
                                 </button>
                                 <div class="item-percentage">${percentageHtml}</div>
-                                <p class="item-value">- ${newItem.item.value.toFixed(2)} </p>
+                                <p class="item-value">- ${newItem.value.toFixed(2)}</p>
                             </li>
                         `;
         }
@@ -109,9 +107,11 @@ const FinanceView = (function(){
     }
     
     function updateData(newData){
-        updateIncomeAndExpense(newData);      
-        updateProfit(newData);
-        updateItemsPercentage(newData.allItems.expense);
+        if(newData){
+            updateIncomeAndExpense(newData);      
+            updateProfit(newData);
+            updateItemsPercentage(newData.allItems.expense);
+        }
     }
     
     function updateIncomeAndExpense(newData){
@@ -166,12 +166,18 @@ const FinanceView = (function(){
         }
     }
     
-    function deleteItem(idItem){
-        element = document.getElementById(idItem);
+    function deleteItem(idItem, type){
+        let element;
+        if (type === "income"){
+            element = document.querySelector(`.income-container #${idItem}`);
+        }else{
+            element = document.querySelector(`.expense-container #${idItem}`);
+        }
+        console.log(element);
         element.parentNode.removeChild(element);    
     }
     
-    function displayData(){
+    function displayDate(){
         const currentDate = new Date();
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         
@@ -181,6 +187,27 @@ const FinanceView = (function(){
         DOMelements.datetimeTitle.textContent = months[monthNumber-1]+" "+year;
     }
     
+    function displayLoadedData(loadedData){
+        if(loadedData){
+            updateIncomeAndExpense(loadedData);      
+            updateProfit(loadedData);
+            //here render all the loaded items (probably then delete updatePercentageItem function)
+            displayAllItems(loadedData.allItems);
+            updateItemsPercentage(loadedData.allItems.expense);
+        }
+    }
+    
+    function displayAllItems(items){
+        const incomeItems = items.income;
+        const expenseItems = items.expense;
+        
+        incomeItems.forEach(function(item){
+            addItem(item, "income");
+        });
+        expenseItems.forEach(function(item){
+            addItem(item, "expense");
+        });
+    }
     
     return{
         DOMelements,
@@ -189,7 +216,8 @@ const FinanceView = (function(){
         addItem,
         updateData,
         deleteItem,
-        displayData
+        displayDate,
+        displayLoadedData
     }
     
     
@@ -202,7 +230,7 @@ const FinanceModel = (function(){
         inputType: "income"
     }
     
-    const data ={
+    let data ={
         totalValues:{
             income:0,
             expense:{
@@ -332,13 +360,40 @@ const FinanceModel = (function(){
         });
     }
     
+    function saveData(){
+        localStorage.setItem("incomes", JSON.stringify(data.allItems.income));
+        localStorage.setItem("expenses", JSON.stringify(data.allItems.expense));
+    }
+    
+    function loadData(){
+        const incomeItems = JSON.parse(localStorage.getItem("incomes"));
+        const expenseItems = JSON.parse(localStorage.getItem("expenses"));
+        
+        
+        if(incomeItems){
+            incomeItems.forEach(function(item){
+                const incomeItem = new Income(item.id, item.description, item.value);
+                data.allItems.income.push(incomeItem);
+            });
+        }
+        
+        if(expenseItems){
+            expenseItems.forEach(function(item){
+                const expenseItem = new Expense(item.id, item.description, item.value);
+                data.allItems.expense.push(expenseItem);
+            });
+        }
+    }
+    
     return{
         currentState,
         changeType,
         addItem,
         updateData,
         deleteItem,
-        getData
+        getData,
+        saveData,
+        loadData
     }
     
     
@@ -355,11 +410,17 @@ const FinanceController = (function(){
     
     
     
-    function initialization(){
-        
+    function initialization(){ 
         setupListeners();
-        setDefaults();
         
+        FinanceModel.loadData();
+        FinanceModel.updateData();
+        
+        const loadedData = FinanceModel.getData();
+        
+        FinanceView.displayLoadedData(loadedData);
+        //FinanceView.updateData(loadedData);
+        FinanceView.displayDate();
     }
     
     function setupListeners(){
@@ -383,16 +444,13 @@ const FinanceController = (function(){
     
     function addItem (){
         const userInput = FinanceView.getUserInput();
-        const addedItem = FinanceModel.addItem(userInput.description,userInput.value);
-        FinanceView.addItem(addedItem);
+        const addedItem = FinanceModel.addItem(userInput.description, userInput.value);
+        FinanceView.addItem(addedItem.item, addedItem.type);
         
         const newData = FinanceModel.updateData();  
         FinanceView.updateData(newData);
-    }
-    
-    function setDefaults(){
-        FinanceView.updateData(FinanceModel.getData());
-        FinanceView.displayData();
+        
+        FinanceModel.saveData();
     }
     
     
@@ -405,17 +463,18 @@ const FinanceController = (function(){
         
         if(itemID){
             
-            const id = itemID.split("-")[1];
+            const id = itemID.split('-')[1];
             const type = item.classList[0].split('-')[0];
             
             
             FinanceModel.deleteItem(id,type);
             
-            FinanceView.deleteItem(itemID);
+            FinanceView.deleteItem(itemID, type);
             
             const data = FinanceModel.updateData();
             FinanceView.updateData(data);            
         }
+        FinanceModel.saveData();
         
     }
     
