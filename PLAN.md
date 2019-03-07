@@ -13,7 +13,7 @@ This plan is not consistent and *can be changed* in advance
 
 **DONE** 3. Implement persistent data using localStorage
 
-4. Refactor Code
+**DONE** 4. Refactor Code a little
 
 5. Add creation time for each list item and display them separatly in groups (each group divided by days):
     

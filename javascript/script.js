@@ -1,4 +1,5 @@
-//TODO: refactor code a little
+//TODO: add date for each income/expense items and display them
+
 const FinanceView = (function(){
     const DOMelements ={
         changeTypeButton:       document.querySelector(".js--button-change"),
@@ -40,8 +41,7 @@ const FinanceView = (function(){
             const icon = document.querySelector(".fa-plus");
             icon.classList.remove("fa-plus");
             icon.classList.add("fa-minus");
-        }
-        
+        }     
     }
     
     function getUserInput(){
@@ -60,40 +60,49 @@ const FinanceView = (function(){
             return null;
         }
         
-        if(type==="income"){ //refactor that later
+        if(type==="income"){ 
             listElement = DOMelements.incomeContainer;
-            htmlCode =  `
-                            <li class="income-item" id="item-${newItem.id}">
-                                <p class="item-description">${newItem.description}</p>
-                                <button class="delete-item-button">
-                                    <i class="far fa-times-circle js--delete-item-button"></i>
-                                </button>
-                                <p class="item-value">+ ${newItem.value.toFixed(2)} </p>
-                            </li>
-                        `;
+            htmlCode =  createIncomeItem(newItem);
         }else{
             listElement = DOMelements.expenseContainer;
-            let percentageHtml = newItem.percentage+"%";
-            
-            if (percentageHtml === -1) {
-                percentageHtml = "&mdash;"; 
-            }
-            
-            htmlCode =  `
-                            <li class="expense-item" id="item-${newItem.id}">
-                                <p class="item-description">${newItem.description}</p>
-                                <button class="delete-item-button">
-                                    <i class="far fa-times-circle js--delete-item-button"></i>
-                                </button>
-                                <div class="item-percentage">${percentageHtml}</div>
-                                <p class="item-value">- ${newItem.value.toFixed(2)}</p>
-                            </li>
-                        `;
+            htmlCode = createExpenseItem(newItem);
         }
-        
         
         listElement.insertAdjacentHTML("afterbegin", htmlCode);
         clearInput();
+    }
+    
+    function createIncomeItem(item){
+        htmlCode =  `
+                        <li class="income-item" id="item-${item.id}">
+                            <p class="item-description">${item.description}</p>
+                            <button class="delete-item-button">
+                                <i class="far fa-times-circle js--delete-item-button"></i>
+                            </button>
+                            <p class="item-value">+ ${item.value.toFixed(2)} </p>
+                        </li>
+                    `;
+        return htmlCode;
+    }
+    
+    function createExpenseItem(item){
+        let percentageHtml = item.percentage+"%";
+
+        if (percentageHtml === -1) {
+            percentageHtml = "&mdash;"; 
+        }
+
+        htmlCode =  `
+                        <li class="expense-item" id="item-${item.id}">
+                            <p class="item-description">${item.description}</p>
+                            <button class="delete-item-button">
+                                <i class="far fa-times-circle js--delete-item-button"></i>
+                            </button>
+                            <div class="item-percentage">${percentageHtml}</div>
+                            <p class="item-value">- ${item.value.toFixed(2)}</p>
+                        </li>
+                    `;
+        return htmlCode;
     }
         
     function warnForInput(){
@@ -168,12 +177,13 @@ const FinanceView = (function(){
     
     function deleteItem(idItem, type){
         let element;
+        
         if (type === "income"){
             element = document.querySelector(`.income-container #${idItem}`);
         }else{
             element = document.querySelector(`.expense-container #${idItem}`);
         }
-        console.log(element);
+        
         element.parentNode.removeChild(element);    
     }
     
@@ -189,11 +199,13 @@ const FinanceView = (function(){
     
     function displayLoadedData(loadedData){
         if(loadedData){
+            
             updateIncomeAndExpense(loadedData);      
             updateProfit(loadedData);
-            //here render all the loaded items (probably then delete updatePercentageItem function)
+            
             displayAllItems(loadedData.allItems);
             updateItemsPercentage(loadedData.allItems.expense);
+            
         }
     }
     
@@ -283,7 +295,7 @@ const FinanceModel = (function(){
         let newItem;
         const numValue = parseFloat(value);
         const moduleValue = Math.abs(numValue);
-        if(currentState.inputType==="income"){
+        if(currentState.inputType === "income"){
             newItem = new Income(id, description, moduleValue);
         }else{  
             newItem = new Expense(id, description, moduleValue);
@@ -301,10 +313,10 @@ const FinanceModel = (function(){
     
     
     function changeType(){
-        if(currentState.inputType==="income")
-            currentState.inputType="expense";
+        if(currentState.inputType === "income")
+            currentState.inputType = "expense";
         else 
-            currentState.inputType="income";
+            currentState.inputType = "income";
     }
     
     function updateData(){
@@ -402,13 +414,8 @@ const FinanceModel = (function(){
 
 
 const FinanceController = (function(){
-    
-    
+     
     const DOMelements = FinanceView.DOMelements;
-    
-    
-    
-    
     
     function initialization(){ 
         setupListeners();
@@ -419,7 +426,6 @@ const FinanceController = (function(){
         const loadedData = FinanceModel.getData();
         
         FinanceView.displayLoadedData(loadedData);
-        //FinanceView.updateData(loadedData);
         FinanceView.displayDate();
     }
     
@@ -475,16 +481,12 @@ const FinanceController = (function(){
             FinanceView.updateData(data);            
         }
         FinanceModel.saveData();
-        
     }
     
     return  {
-        
-        initialization
-                
+        initialization   
     }
-    
-    
+     
 })();
 
 
