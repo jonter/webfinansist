@@ -5,24 +5,22 @@ This plan is not consistent and *can be changed* in advance
 
 * I.    Creating a simple budget calculator. All of the incomes and expenses should be added manually.
 
-1. Create a frame of the project (html/css): this step includes also buttons and simple smooth animations (no javascript);
+**DONE** 1. Create a frame of the project (html/css): this step includes also buttons and simple smooth animations (no javascript);
 
-2. Add javascript for our app (using MVC pattern):
+**DONE** 2. Add javascript for our app (using MVC pattern):
     * Add functional for __new item button__: create new list item, calculate bugder and so on
     * Add functional for __remove buttons__
 
-3. Implement persistent data using localStorage
+**DONE** 3. Implement persistent data using localStorage
 
-4. Add creation time for each list element (that should appear only when hover element)
+4. Refactor Code
 
-5. Polish UI 
-
-6. Add second representation of data: a single list for all expenses/incomes
+5. Add creation time for each list item and display them separatly in groups (each group divided by days):
+    
 
 
 
 * II.   Refactor code using webpack 
-
 
 * III.  Add new feature: second section for tracking debts (borrowings and lendings)
 
