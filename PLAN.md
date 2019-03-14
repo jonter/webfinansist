@@ -15,12 +15,12 @@ This plan is not consistent and *can be changed* in advance
 
 **DONE** 4. Refactor Code a little
 
-5. Add creation time for each list item and display them separatly in groups (each group divided by days):
+**DONE** 5. Add creation time for each list item and display them separatly in groups (each group divided by days):
     
 
 
 
-* II.   Refactor code using webpack 
+* II.   Refactor code using webpack divide it into modules
 
 * III.  Add new feature: second section for tracking debts (borrowings and lendings)
 

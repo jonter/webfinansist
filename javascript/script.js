@@ -1,4 +1,4 @@
-//TODO: add date for each income/expense items and display them
+//TODO: webpack
 
 const FinanceView = (function(){
     const DOMelements ={
@@ -6,8 +6,6 @@ const FinanceView = (function(){
         addItemButton:          document.querySelector(".js--button-add"),
         inputTitleItem:         document.querySelector(".js--input-description"),
         inputValueItem:         document.querySelector(".js--input-value"),
-        incomeContainer:        document.querySelector(".js--income-list"),
-        expenseContainer:       document.querySelector(".js--expense-list"),
         totalIncomeValue:       document.querySelector(".js--total-income-value"),
         totalExpenseValue:      document.querySelector(".js--total-expense-value"),
         totalProfitValue:       document.querySelector(".js--total-profit-value"),
@@ -52,24 +50,72 @@ const FinanceView = (function(){
     }
     
     function addItem(newItem, type){
-        
-        let listElement, htmlCode;
+        let listElement, htmlCode, dateContainer;
         
         if(!newItem){
             warnForInput();
             return null;
         }
         
+        const dateFormated = formatDate(newItem.dateCreation);
+        dateContainer = findDateContainer(dateFormated);
+        
+        if(!dateContainer){
+            const containerHTML = createNewDateContainer(dateFormated);
+            DOMelements.dataContainer.insertAdjacentHTML("afterbegin", containerHTML);
+            dateContainer = findDateContainer(dateFormated);
+        }
+        
         if(type==="income"){ 
-            listElement = DOMelements.incomeContainer;
+            listElement = dateContainer.children[1].firstElementChild;
             htmlCode =  createIncomeItem(newItem);
         }else{
-            listElement = DOMelements.expenseContainer;
+            listElement = dateContainer.children[2].firstElementChild;
             htmlCode = createExpenseItem(newItem);
         }
         
         listElement.insertAdjacentHTML("afterbegin", htmlCode);
         clearInput();
+    }
+    
+    function formatDate(date){
+        return date.toLocaleDateString('en-US', {
+            month : 'short',
+            day : 'numeric',
+            year : 'numeric'
+        });
+    }
+    
+    function findDateContainer(date){
+        const dateContainers = Array.from(document.querySelectorAll(".js--datetime-container"));
+        for(container of dateContainers){
+            if(container.dataset.date === date){
+                return container;
+            }
+        }
+        return null;
+    }
+    
+    function createNewDateContainer(date){
+        let dateText = (date === formatDate(new Date()))
+            ? "Today"
+            : date;
+        
+        const containerHTML =   `
+                                    <div class="datetime-container js--datetime-container clearfix" data-date = "${date}">
+                                        <h3 class="datetime-title">${dateText}</h3>
+                                        <div class="income-container">
+                                            <ul class="income-data-list js--income-list">
+                                            </ul>
+                                        </div>
+
+                                        <div class="expense-container clearfix ">
+                                            <ul class="expense-data-list js--expense-list">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                `;
+        return containerHTML;
     }
     
     function createIncomeItem(item){
@@ -169,7 +215,6 @@ const FinanceView = (function(){
                     }else{
                         itemPercentageArray[i].textContent = expenseArray[j].percentage+"%";
                     }
-                        return;
                 }
             }
         }
@@ -183,8 +228,22 @@ const FinanceView = (function(){
         }else{
             element = document.querySelector(`.expense-container #${idItem}`);
         }
+        const dateContainer = element.parentNode.parentNode.parentNode;
+        element.parentNode.removeChild(element);  
         
-        element.parentNode.removeChild(element);    
+        if(!checkForItems(dateContainer)){
+            dateContainer.parentNode.removeChild(dateContainer);
+        }
+    }
+    
+    function checkForItems(dateContainer){
+        const incomeList = dateContainer.children[1].firstElementChild;
+        const expenseList = dateContainer.children[2].firstElementChild;
+        
+        if(incomeList.children.length<1 && expenseList.children.length<1){
+            return false;
+        }
+        return true;      
     }
     
     function displayDate(){
@@ -253,21 +312,24 @@ const FinanceModel = (function(){
         },
         
         allItems:{
-            income:[],
-            expense:[]
+            income:  [],
+            expense: []
         }  
     }
     
-    const Income = function (id, description, value){
+    const Income = function (id, description, value, date = new Date()){
         this.id = id;
         this.description = description;
         this.value = value;
+        this.dateCreation = new Date(date);
     }
     
-    const Expense = function (id, description, value){
+    const Expense = function (id, description, value, date = new Date()){
         this.id = id;
         this.description = description;
         this.value = value;
+        this.dateCreation = new Date(date);
+        
         this.percentage = -1;
         
         this.calculatePercentage = function (totalIncome){
@@ -287,6 +349,7 @@ const FinanceModel = (function(){
         
         const itemsArray = data.allItems[currentState.inputType];
         let id=0;
+        
         if(itemsArray.length>0){
             const lastItem = itemsArray[itemsArray.length-1];
             id = lastItem.id+1;
@@ -295,6 +358,7 @@ const FinanceModel = (function(){
         let newItem;
         const numValue = parseFloat(value);
         const moduleValue = Math.abs(numValue);
+        
         if(currentState.inputType === "income"){
             newItem = new Income(id, description, moduleValue);
         }else{  
@@ -303,7 +367,7 @@ const FinanceModel = (function(){
         }
         
         data.allItems[currentState.inputType].push(newItem);
-        
+                
         return {
             item: newItem,
             type: currentState.inputType
@@ -384,14 +448,14 @@ const FinanceModel = (function(){
         
         if(incomeItems){
             incomeItems.forEach(function(item){
-                const incomeItem = new Income(item.id, item.description, item.value);
+                const incomeItem = new Income(item.id, item.description, item.value, item.dateCreation);
                 data.allItems.income.push(incomeItem);
             });
         }
         
         if(expenseItems){
             expenseItems.forEach(function(item){
-                const expenseItem = new Expense(item.id, item.description, item.value);
+                const expenseItem = new Expense(item.id, item.description, item.value, item.dateCreation);
                 data.allItems.expense.push(expenseItem);
             });
         }
