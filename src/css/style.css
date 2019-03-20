@@ -30,8 +30,8 @@ ul{
 .section-top{
     
     height: 40vh;
-/*  source image: https://unsplash.com/photos/yw7mV9JeND4  */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(images/money1.jpg);
+    /*  static images is not supported with these settings, so I fimd img by it`s URL*/
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(https://images.unsplash.com/photo-1518458028785-8fbcd101ebb9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80);
     background-size: cover;
     background-position: 0% 20%;
     position: relative;
@@ -58,7 +58,7 @@ ul{
 
 
 .total-income{
-    display: inline-block;
+    display:block;
     width:45%;
     float: left;
     background-color: transparent;
@@ -78,7 +78,7 @@ ul{
 }
 
 .total-expense{
-    display: inline-block;
+    display: block;
     float: right;
     width:45%; 
     background-color: transparent;
@@ -299,7 +299,7 @@ ul{
 }
 
 .income-item .item-value{
-    display:inline-block;
+    display:block;
     float:right;   
     color: #24d9a2;
 }
@@ -358,14 +358,14 @@ ul{
 }
 
 .expense-item .item-value{
-    display:inline-block;
+    display:block;
     float:right;
     color: #e83b56;
 }
 
 .expense-item .item-percentage{
+    display: block;
     float:right;
-    display: inline-block;
     
     font-size: 60%;
     margin-left: 4px;
