@@ -7,9 +7,10 @@
 # Node
 node_modules
 
-# Dist & test
+# Dist & test & public
 test
 dist
+public
 
 # BD, logs
 *.log
